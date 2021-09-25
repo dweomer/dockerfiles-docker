@@ -16,13 +16,12 @@ steps:
       dockerfile: ./20.10/Dockerfile
       target: docker
       tags:
-      - "20.10-amd64"
-      - "20-amd64"
+        - "20.10-amd64"
+        - "20-amd64"
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
-      mtu: 900
 
   - name: 20.10-dind
     image: plugins/docker
@@ -34,13 +33,12 @@ steps:
       dockerfile: ./20.10/Dockerfile
       target: dockerd
       tags:
-      - "20.10-dind-amd64"
-      - "20-dind-amd64"
+        - "20.10-dind-amd64"
+        - "20-dind-amd64"
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
-      mtu: 900
 ---
 kind: pipeline
 type: docker
@@ -65,7 +63,6 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
-      mtu: 900
 
   - name: 20.10-dind
     image: plugins/docker
@@ -83,7 +80,6 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
-      mtu: 900
 ---
 kind: pipeline
 type: docker
@@ -108,7 +104,6 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
-      mtu: 900
 
   - name: 20.10-dind
     image: plugins/docker
@@ -126,9 +121,9 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
-      mtu: 900
+
 ---
 kind: signature
-hmac: 1f40ff98771319f2345b97ca92ffced47ee59ead2b429309c3b6c78d4934e032
+hmac: 3de5a3d8c274786f4f0b0a9057777e135278c34c4ec361efab61d7ff9430b93e
 
 ...
