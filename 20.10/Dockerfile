@@ -65,11 +65,6 @@ RUN set -eux \
 FROM scratch AS docker
 ARG ROOTFS
 COPY --from=prep-docker ${ROOTFS}/ /
-ARG DOCKER_TLS_CERTDIR=/certs
-ENV DOCKER_TLS_CERTDIR="${DOCKER_TLS_CERTDIR}"
-RUN set -eux \
- && mkdir -vp ${DOCKER_TLS_CERTDIR}/client \
- && chmod -v 1777 ${DOCKER_TLS_CERTDIR} ${DOCKER_TLS_CERTDIR}/client
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["sh"]
 
@@ -134,11 +129,7 @@ RUN set -eux \
 FROM scratch AS dockerd
 ARG ROOTFS
 COPY --from=prep-dockerd ${ROOTFS}/ /
-ARG DOCKER_TLS_CERTDIR=/certs
-ENV DOCKER_TLS_CERTDIR="${DOCKER_TLS_CERTDIR}"
 RUN set -eux \
- && mkdir -vp ${DOCKER_TLS_CERTDIR}/client \
- && chmod -v 1777 ${DOCKER_TLS_CERTDIR} ${DOCKER_TLS_CERTDIR}/client \
  && addgroup -S dockremap \
  && adduser -S -G dockremap dockremap \
  && echo 'dockremap:165536:65536' >> /etc/subuid \
