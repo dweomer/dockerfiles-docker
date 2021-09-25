@@ -18,6 +18,11 @@ steps:
       tags:
       - "20.10-amd64"
       - "20-amd64"
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      mtu: 1000
 
   - name: 20.10-dind
     image: plugins/docker
@@ -31,6 +36,11 @@ steps:
       tags:
       - "20.10-dind-amd64"
       - "20-dind-amd64"
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      mtu: 1000
 ---
 kind: pipeline
 type: docker
@@ -51,6 +61,11 @@ steps:
       tags:
         - "20.10-arm64"
         - "20-arm64"
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      mtu: 1000
 
   - name: 20.10-dind
     image: plugins/docker
@@ -64,6 +79,11 @@ steps:
       tags:
         - "20.10-dind-arm64"
         - "20-dind-arm64"
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      mtu: 1000
 ---
 kind: pipeline
 type: docker
@@ -84,6 +104,11 @@ steps:
       tags:
         - "20.10-armhf"
         - "20-armhf"
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      mtu: 1000
 
   - name: 20.10-dind
     image: plugins/docker
@@ -97,8 +122,13 @@ steps:
       tags:
         - "20.10-dind-armhf"
         - "20-dind-armhf"
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      mtu: 1000
 ---
 kind: signature
-hmac: f2dbcb003c162c02670510e048aa34c417a8d5dabc1b1ae3992b903dcf359886
+hmac: 0b31c8e2eaf526f3e3383a0d686d36de1cd207261e6da89037bf62f575125a37
 
 ...
