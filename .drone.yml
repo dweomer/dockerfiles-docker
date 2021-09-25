@@ -1,0 +1,104 @@
+---
+kind: pipeline
+type: docker
+name: build-amd64
+
+platform: {os: linux, arch: amd64}
+
+steps:
+  - name: 20.10
+    image: plugins/docker
+    environment:
+      DOCKER_BUILDKIT: "1"
+    settings:
+      repo: dweomer/docker
+      context: ./20.10/.
+      dockerfile: ./20.10/Dockerfile
+      target: docker
+      tags:
+      - "20.10-amd64"
+      - "20-amd64"
+
+  - name: 20.10-dind
+    image: plugins/docker
+    environment:
+      DOCKER_BUILDKIT: "1"
+    settings:
+      repo: dweomer/docker
+      context: ./20.10/.
+      dockerfile: ./20.10/Dockerfile
+      target: dockerd
+      tags:
+      - "20.10-dind-amd64"
+      - "20-dind-amd64"
+---
+kind: pipeline
+type: docker
+name: build-arm64
+
+platform: {os: linux, arch: arm64}
+
+steps:
+  - name: 20.10
+    image: plugins/docker
+    environment:
+      DOCKER_BUILDKIT: "1"
+    settings:
+      repo: dweomer/docker
+      context: ./20.10/.
+      dockerfile: ./20.10/Dockerfile
+      target: docker
+      tags:
+        - "20.10-arm64"
+        - "20-arm64"
+
+  - name: 20.10-dind
+    image: plugins/docker
+    environment:
+      DOCKER_BUILDKIT: "1"
+    settings:
+      repo: dweomer/docker
+      context: ./20.10/.
+      dockerfile: ./20.10/Dockerfile
+      target: dockerd
+      tags:
+        - "20.10-dind-arm64"
+        - "20-dind-arm64"
+---
+kind: pipeline
+type: docker
+name: build-armhf
+
+platform: {os: linux, arch: arm}
+
+steps:
+  - name: 20.10
+    image: plugins/docker
+    environment:
+      DOCKER_BUILDKIT: "1"
+    settings:
+      repo: dweomer/docker
+      context: ./20.10/.
+      dockerfile: ./20.10/Dockerfile
+      target: docker
+      tags:
+        - "20.10-armhf"
+        - "20-armhf"
+
+  - name: 20.10-dind
+    image: plugins/docker
+    environment:
+      DOCKER_BUILDKIT: "1"
+    settings:
+      repo: dweomer/docker
+      context: ./20.10/.
+      dockerfile: ./20.10/Dockerfile
+      target: dockerd
+      tags:
+        - "20.10-dind-armhf"
+        - "20-dind-armhf"
+---
+kind: signature
+hmac: f2dbcb003c162c02670510e048aa34c417a8d5dabc1b1ae3992b903dcf359886
+
+...
