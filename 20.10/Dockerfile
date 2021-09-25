@@ -20,7 +20,6 @@ ARG DOCKER_VERSION
 ARG ROOTFS
 RUN set -eux \
  && source /etc/profile.d/alpine-release.sh \
- && env | sort \
  && apk add \
         --allow-untrusted \
         --arch ${ALPINE_ARCH=$(apk --print-arch)} \
@@ -88,6 +87,7 @@ RUN set -eux \
  && chmod -v +x ${ROOTFS}/usr/local/bin/{dind,dockerd-entrypoint.sh}
 
 RUN set -eux \
+ && source /etc/profile.d/alpine-release.sh \
  && apk add \
         --allow-untrusted \
         --arch ${ALPINE_ARCH=$(apk --print-arch)} \
@@ -109,6 +109,7 @@ RUN set -eux \
 
 RUN <<EOF
 set -eux
+source /etc/profile.d/alpine-release.sh
 for tar in ${ROOTFS}/var/cache/apk/APKINDEX.*.tar.gz; do
     mkdir ${tar%*.tar.gz}
     tar xzf ${tar} -C ${tar%*.tar.gz}

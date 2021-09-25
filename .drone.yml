@@ -22,7 +22,7 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
-      mtu: 1000
+      mtu: 900
 
   - name: 20.10-dind
     image: plugins/docker
@@ -40,7 +40,7 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
-      mtu: 1000
+      mtu: 900
 ---
 kind: pipeline
 type: docker
@@ -65,7 +65,7 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
-      mtu: 1000
+      mtu: 900
 
   - name: 20.10-dind
     image: plugins/docker
@@ -83,7 +83,7 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
-      mtu: 1000
+      mtu: 900
 ---
 kind: pipeline
 type: docker
@@ -108,7 +108,7 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
-      mtu: 1000
+      mtu: 900
 
   - name: 20.10-dind
     image: plugins/docker
@@ -126,9 +126,9 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
-      mtu: 1000
+      mtu: 900
 ---
 kind: signature
-hmac: 0b31c8e2eaf526f3e3383a0d686d36de1cd207261e6da89037bf62f575125a37
+hmac: 1f40ff98771319f2345b97ca92ffced47ee59ead2b429309c3b6c78d4934e032
 
 ...
