@@ -71,7 +71,7 @@ steps:
 ---
 kind: pipeline
 type: docker
-name: linux-armv7
+name: linux-arm
 
 platform: {os: linux, arch: arm}
 
@@ -104,7 +104,46 @@ steps:
       auto_tag: true
       auto_tag_suffix: "dind-${DRONE_STAGE_NAME}"
 ---
+kind: pipeline
+type: docker
+name: manifest
+
+platform: {os: linux, arch: amd64}
+
+depends_on:
+  - linux-amd64
+  - linux-arm64
+  - linux-arm
+
+steps:
+  - name: latest
+    image: plugins/manifest
+    settings:
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      platforms:
+        - linux/amd64
+        - linux/arm64
+        - linux/arm
+      target: dweomer/docker:latest
+      template: dweomer/docker:OS-ARCH
+  - name: dind
+    image: plugins/manifest
+    settings:
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      platforms:
+        - linux/amd64
+        - linux/arm64
+        - linux/arm
+      target: dweomer/docker:dind
+      template: dweomer/docker:dind-OS-ARCH
+---
 kind: signature
-hmac: d7a8306830f405d9de298c6d62779b9d9dc51d196d024f723c9269e8056735ef
+hmac: bcc775bceba8ae2f21818b56da33ac8dfa29d14ce552af871ea54f2f91c10fcc
 
 ...
