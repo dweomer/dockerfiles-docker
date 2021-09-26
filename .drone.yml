@@ -10,29 +10,35 @@ steps:
     image: dweomer/drone-plugins-docker:linux-amd64
     environment:
       DOCKER_BUILDKIT: "1"
+      DOCKER_VERSION: "${DOCKER_VERSION:=20.10.7}"
     settings:
       repo: dweomer/docker
       target: docker
+      build_args_from_env:
+        - DOCKER_VERSION
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
       auto_tag: true
-      auto_tag_suffix: "${DRONE_STAGE_NAME}"
+      auto_tag_suffix: linux-amd64
 
   - name: dockerd
     image: dweomer/drone-plugins-docker:linux-amd64
     environment:
       DOCKER_BUILDKIT: "1"
+      DOCKER_VERSION: "${DOCKER_VERSION:=20.10.7}"
     settings:
       repo: dweomer/docker
       target: dockerd
+      build_args_from_env:
+        - DOCKER_VERSION
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
       auto_tag: true
-      auto_tag_suffix: "dind-${DRONE_STAGE_NAME}"
+      auto_tag_suffix: dind-linux-amd64
 ---
 kind: pipeline
 type: docker
@@ -45,29 +51,35 @@ steps:
     image: dweomer/drone-plugins-docker:linux-arm64
     environment:
       DOCKER_BUILDKIT: "1"
+      DOCKER_VERSION: "${DOCKER_VERSION:=20.10.7}"
     settings:
       repo: dweomer/docker
       target: docker
+      build_args_from_env:
+        - DOCKER_VERSION
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
       auto_tag: true
-      auto_tag_suffix: "${DRONE_STAGE_NAME}"
+      auto_tag_suffix: linux-arm64
 
   - name: dockerd
     image: dweomer/drone-plugins-docker:linux-arm64
     environment:
       DOCKER_BUILDKIT: "1"
+      DOCKER_VERSION: "${DOCKER_VERSION:=20.10.7}"
     settings:
       repo: dweomer/docker
       target: dockerd
+      build_args_from_env:
+        - DOCKER_VERSION
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
       auto_tag: true
-      auto_tag_suffix: "dind-${DRONE_STAGE_NAME}"
+      auto_tag_suffix: dind-linux-arm64
 ---
 kind: pipeline
 type: docker
@@ -80,29 +92,35 @@ steps:
     image: dweomer/drone-plugins-docker:linux-arm
     environment:
       DOCKER_BUILDKIT: "1"
+      DOCKER_VERSION: "${DOCKER_VERSION:=20.10.7}"
     settings:
       repo: dweomer/docker
       target: docker
+      build_args_from_env:
+        - DOCKER_VERSION
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
       auto_tag: true
-      auto_tag_suffix: "${DRONE_STAGE_NAME}"
+      auto_tag_suffix: linux-arm
 
   - name: dockerd
     image: dweomer/drone-plugins-docker:linux-arm
     environment:
       DOCKER_BUILDKIT: "1"
+      DOCKER_VERSION: "${DOCKER_VERSION:=20.10.7}"
     settings:
       repo: dweomer/docker
       target: dockerd
+      build_args_from_env:
+        - DOCKER_VERSION
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
       auto_tag: true
-      auto_tag_suffix: "dind-${DRONE_STAGE_NAME}"
+      auto_tag_suffix: dind-linux-arm
 ---
 kind: pipeline
 type: docker
@@ -116,34 +134,37 @@ depends_on:
   - linux-arm
 
 steps:
-  - name: latest
+  - name: docker
     image: plugins/manifest
     settings:
+      auto_tag: true
+      ignore_missing: true
+      spec: manifest-docker.tmpl
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
-      platforms:
-        - linux/amd64
-        - linux/arm64
-        - linux/arm
-      target: dweomer/docker:latest
-      template: dweomer/docker:OS-ARCH
-  - name: dind
+    when:
+      event:
+        include:
+          - tag
+
+  - name: dockerd
     image: plugins/manifest
     settings:
+      auto_tag: true
+      ignore_missing: true
+      spec: manifest-dockerd.tmpl
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
-      platforms:
-        - linux/amd64
-        - linux/arm64
-        - linux/arm
-      target: dweomer/docker:dind
-      template: dweomer/docker:dind-OS-ARCH
+    when:
+      event:
+        include:
+          - tag
 ---
 kind: signature
-hmac: bcc775bceba8ae2f21818b56da33ac8dfa29d14ce552af871ea54f2f91c10fcc
+hmac: e2ecf64984eb19840bf1decac7633c46a2cdd991852cb764bae923e1b1a741d0
 
 ...
