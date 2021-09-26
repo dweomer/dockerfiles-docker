@@ -1,129 +1,110 @@
 ---
 kind: pipeline
 type: docker
-name: build-amd64
+name: linux-amd64
 
 platform: {os: linux, arch: amd64}
 
 steps:
-  - name: 20.10
+  - name: docker
     image: dweomer/drone-plugins-docker:linux-amd64
     environment:
       DOCKER_BUILDKIT: "1"
     settings:
       repo: dweomer/docker
-      context: ./20.10/.
-      dockerfile: ./20.10/Dockerfile
       target: docker
-      tags:
-        - "20.10-amd64"
-        - "20-amd64"
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
+      auto_tag: true
+      auto_tag_suffix: "${DRONE_STAGE_NAME}"
 
-  - name: 20.10-dind
+  - name: dockerd
     image: dweomer/drone-plugins-docker:linux-amd64
     environment:
       DOCKER_BUILDKIT: "1"
     settings:
       repo: dweomer/docker
-      context: ./20.10/.
-      dockerfile: ./20.10/Dockerfile
       target: dockerd
-      tags:
-        - "20.10-dind-amd64"
-        - "20-dind-amd64"
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
+      auto_tag: true
+      auto_tag_suffix: "dind-${DRONE_STAGE_NAME}"
 ---
 kind: pipeline
 type: docker
-name: build-arm64
+name: linux-arm64
 
 platform: {os: linux, arch: arm64}
 
 steps:
-  - name: 20.10
+  - name: docker
     image: dweomer/drone-plugins-docker:linux-arm64
     environment:
       DOCKER_BUILDKIT: "1"
     settings:
       repo: dweomer/docker
-      context: ./20.10/.
-      dockerfile: ./20.10/Dockerfile
       target: docker
-      tags:
-        - "20.10-arm64"
-        - "20-arm64"
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
+      auto_tag: true
+      auto_tag_suffix: "${DRONE_STAGE_NAME}"
 
-  - name: 20.10-dind
+  - name: dockerd
     image: dweomer/drone-plugins-docker:linux-arm64
     environment:
       DOCKER_BUILDKIT: "1"
     settings:
       repo: dweomer/docker
-      context: ./20.10/.
-      dockerfile: ./20.10/Dockerfile
       target: dockerd
-      tags:
-        - "20.10-dind-arm64"
-        - "20-dind-arm64"
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
+      auto_tag: true
+      auto_tag_suffix: "dind-${DRONE_STAGE_NAME}"
 ---
 kind: pipeline
 type: docker
-name: build-armv7
+name: linux-armv7
 
 platform: {os: linux, arch: arm}
 
 steps:
-  - name: 20.10
+  - name: docker
     image: dweomer/drone-plugins-docker:linux-arm
     environment:
       DOCKER_BUILDKIT: "1"
     settings:
       repo: dweomer/docker
-      context: ./20.10/.
-      dockerfile: ./20.10/Dockerfile
       target: docker
-      tags:
-        - "20.10-armv7"
-        - "20-armv7"
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
+      auto_tag: true
+      auto_tag_suffix: "${DRONE_STAGE_NAME}"
 
-  - name: 20.10-dind
+  - name: dockerd
     image: dweomer/drone-plugins-docker:linux-arm
     environment:
       DOCKER_BUILDKIT: "1"
     settings:
       repo: dweomer/docker
-      context: ./20.10/.
-      dockerfile: ./20.10/Dockerfile
       target: dockerd
-      tags:
-        - "20.10-dind-armv7"
-        - "20-dind-armv7"
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
-
+      auto_tag: true
+      auto_tag_suffix: "dind-${DRONE_STAGE_NAME}"
 ---
 kind: signature
-hmac: c418da66738b4caddd69228d2ed2745b501c11897c3189e975905ffc305409d2
+hmac: d7a8306830f405d9de298c6d62779b9d9dc51d196d024f723c9269e8056735ef
 
 ...
