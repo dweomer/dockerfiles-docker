@@ -7,7 +7,7 @@ platform: {os: linux, arch: amd64}
 
 steps:
   - name: 20.10
-    image: plugins/docker
+    image: dweomer/drone-plugins-docker:linux-amd64
     environment:
       DOCKER_BUILDKIT: "1"
     settings:
@@ -24,7 +24,7 @@ steps:
         from_secret: docker_password
 
   - name: 20.10-dind
-    image: plugins/docker
+    image: dweomer/drone-plugins-docker:linux-amd64
     environment:
       DOCKER_BUILDKIT: "1"
     settings:
@@ -48,7 +48,7 @@ platform: {os: linux, arch: arm64}
 
 steps:
   - name: 20.10
-    image: plugins/docker
+    image: dweomer/drone-plugins-docker:linux-arm64
     environment:
       DOCKER_BUILDKIT: "1"
     settings:
@@ -65,7 +65,7 @@ steps:
         from_secret: docker_password
 
   - name: 20.10-dind
-    image: plugins/docker
+    image: dweomer/drone-plugins-docker:linux-arm64
     environment:
       DOCKER_BUILDKIT: "1"
     settings:
@@ -83,13 +83,13 @@ steps:
 ---
 kind: pipeline
 type: docker
-name: build-armhf
+name: build-armv7
 
 platform: {os: linux, arch: arm}
 
 steps:
   - name: 20.10
-    image: plugins/docker
+    image: dweomer/drone-plugins-docker:linux-arm
     environment:
       DOCKER_BUILDKIT: "1"
     settings:
@@ -98,15 +98,15 @@ steps:
       dockerfile: ./20.10/Dockerfile
       target: docker
       tags:
-        - "20.10-armhf"
-        - "20-armhf"
+        - "20.10-armv7"
+        - "20-armv7"
       username:
         from_secret: docker_username
       password:
         from_secret: docker_password
 
   - name: 20.10-dind
-    image: plugins/docker
+    image: dweomer/drone-plugins-docker:linux-arm
     environment:
       DOCKER_BUILDKIT: "1"
     settings:
@@ -115,8 +115,8 @@ steps:
       dockerfile: ./20.10/Dockerfile
       target: dockerd
       tags:
-        - "20.10-dind-armhf"
-        - "20-dind-armhf"
+        - "20.10-dind-armv7"
+        - "20-dind-armv7"
       username:
         from_secret: docker_username
       password:
@@ -124,6 +124,6 @@ steps:
 
 ---
 kind: signature
-hmac: 3de5a3d8c274786f4f0b0a9057777e135278c34c4ec361efab61d7ff9430b93e
+hmac: c418da66738b4caddd69228d2ed2745b501c11897c3189e975905ffc305409d2
 
 ...

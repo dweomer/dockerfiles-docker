@@ -9,7 +9,8 @@ RUN set -eux \
  && apk --no-cache add \
     bash \
  && echo '. /etc/os-release' > /etc/profile.d/alpine-release.sh \
- && echo 'export VERSION_ID' >> /etc/profile.d/alpine-release.sh \
+ && echo 'export ALPINE_VERSION=${VERSION_ID}' >> /etc/profile.d/alpine-release.sh \
+ && echo 'export ALPINE_RELEASE=${VERSION_ID%.*}' >> /etc/profile.d/alpine-release.sh \
  && chmod +x /etc/profile.d/alpine-release.sh
 SHELL ["/usr/bin/env", "bash","-c"]
 
@@ -25,8 +26,8 @@ RUN set -eux \
         --arch ${ALPINE_ARCH=$(apk --print-arch)} \
         --initdb \
         --root "${ROOTFS}" \
-        --repository "${ALPINE_MIRROR}/v${VERSION_ID%.*}/main" \
-        --repository "${ALPINE_MIRROR}/v${VERSION_ID%.*}/community" \
+        --repository "${ALPINE_MIRROR}/v${ALPINE_RELEASE}/main" \
+        --repository "${ALPINE_MIRROR}/v${ALPINE_RELEASE}/community" \
     ca-certificates \
     docker-cli~=${DOCKER_VERSION} \
     docker-cli-buildx \
@@ -48,13 +49,32 @@ RUN set -eux \
 RUN cat <<EOF > /sbin/clean.sh && chmod -v +x /sbin/clean.sh
 #!/usr/bin/env bash
 rm -rvf \
-    ${ROOTFS}/{dev,proc,src,sys,tmp,var} \
+    ${ROOTFS}/{dev,media,mnt,opt,proc,src,srv,sys,tmp,var} \
+    ${ROOTFS}/etc/*.blacklist \
     ${ROOTFS}/etc/apk \
+    ${ROOTFS}/etc/conf.d \
+    ${ROOTFS}/etc/crontabs \
+    ${ROOTFS}/etc/fstab \
+    ${ROOTFS}/etc/hostname \
+    ${ROOTFS}/etc/init.d \
+    ${ROOTFS}/etc/inittab \
     ${ROOTFS}/etc/logrotate.d \
+    ${ROOTFS}/etc/modprobe.d \
+    ${ROOTFS}/etc/modules \
+    ${ROOTFS}/etc/modules-load.d \
+    ${ROOTFS}/etc/motd \
+    ${ROOTFS}/etc/netconfig \
     ${ROOTFS}/etc/netw* \
+    ${ROOTFS}/etc/opt \
+    ${ROOTFS}/etc/periodic \
+    ${ROOTFS}/etc/profile \
+    ${ROOTFS}/etc/profile.d \
+    ${ROOTFS}/etc/sudoers \
+    ${ROOTFS}/etc/sudoers.d \
+    ${ROOTFS}/etc/sysctl.* \
     ${ROOTFS}/etc/udhcpd.conf \
     ${ROOTFS}/lib/apk \
-    "${@}"
+    "\${@}"
 EOF
 
 FROM init-docker AS prep-docker
@@ -87,8 +107,8 @@ RUN set -eux \
         --allow-untrusted \
         --arch ${ALPINE_ARCH=$(apk --print-arch)} \
         --root "${ROOTFS}" \
-        --repository "${ALPINE_MIRROR}/v${VERSION_ID%.*}/main" \
-        --repository "${ALPINE_MIRROR}/v${VERSION_ID%.*}/community" \
+        --repository "${ALPINE_MIRROR}/v${ALPINE_RELEASE}/main" \
+        --repository "${ALPINE_MIRROR}/v${ALPINE_RELEASE}/community" \
         alpine-baselayout \
 		btrfs-progs \
         docker-engine~=${DOCKER_VERSION} \
@@ -114,8 +134,8 @@ if grep 'T:ZFS' -H ${ROOTFS}/var/cache/apk/APKINDEX.*/APKINDEX; then
         --allow-untrusted \
         --arch ${ALPINE_ARCH=$(apk --print-arch)} \
         --root "${ROOTFS}" \
-        --repository "${ALPINE_MIRROR}/v${VERSION_ID%.*}/main" \
-        --repository "${ALPINE_MIRROR}/v${VERSION_ID%.*}/community" \
+        --repository "${ALPINE_MIRROR}/v${ALPINE_RELEASE}/main" \
+        --repository "${ALPINE_MIRROR}/v${ALPINE_RELEASE}/community" \
         zfs
 fi
 EOF
@@ -124,7 +144,10 @@ FROM init-dockerd AS prep-dockerd
 ARG ROOTFS
 RUN set -eux \
  && apk --no-cache --root ${ROOTFS} stats \
- && clean.sh
+ && clean.sh \
+    ${ROOTFS}/etc/containerd \
+ && mkdir -vp ${ROOTFS}/{run,tmp,var} \
+ && ln -vs /run ${ROOTFS}/var/
 
 FROM scratch AS dockerd
 ARG ROOTFS
